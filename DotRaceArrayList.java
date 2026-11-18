@@ -41,13 +41,13 @@ public class DotRaceArrayList extends JPanel {
    
    // this method should initialize the "dots" ArrayList
    public void initializeRacers() {
-      int racerCount = 7; // play around with this, trying different numbers.
+      int racerCount = 3; // play around with this, trying different numbers.
                           // Or, try making this a random number...
       int k = 0;
       while (k < racerCount) {
          Dot aDotObject = new Dot(randomName(), k, randomColor(), defaultDiameter);
          dots.add(aDotObject);// FINISH THIS -- insert the Dot object to the dots ArrayList
-
+         k++;
       }
    }
 
@@ -66,7 +66,7 @@ public class DotRaceArrayList extends JPanel {
          repaint();
          delay(pauseTime);
       }
-      System.out.println("And the winner is " + winnaWinnaWinna.getName() + "! . You won by : " + distanceWon(winnaWinnaWinna));
+      System.out.println("And the winner is " + winnaWinnaWinna.getName() + "! You won by: " + distanceWon(winnaWinnaWinna));
    }
 
    public double distanceWon(Dot winner){
@@ -75,6 +75,8 @@ public class DotRaceArrayList extends JPanel {
       int distance = 0;
       int diameter = 0;
       for (int x = 0;x<dots.size();x++){
+         if (x==dots.indexOf(winner))
+            x++;
          if (dots.get(x).getDiameter()>diameter)
             diameter = dots.get(x).getDiameter();
          if (dots.get(x).getDistance()>distance)
