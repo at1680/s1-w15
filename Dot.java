@@ -1,3 +1,6 @@
+// log out of your computer next time aidan XD
+// mr morris teaching straight poison
+
 import java.awt.*;
 
 public class Dot {
