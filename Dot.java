@@ -8,6 +8,8 @@ public class Dot {
     // how far this dot has run    
     private int distance;
 
+    public int Xposition;
+    public int Yposition;
     private int diameter;
     private int racerNumber;
     private Color color;
@@ -49,7 +51,13 @@ public class Dot {
         return(name);
     }
 
+    public int getXPosition(){
+        return(Xposition);
+    }
 
+    public int getYPosition(){
+        return(Yposition);
+    }
 
 
 }

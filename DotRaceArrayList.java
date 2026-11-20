@@ -9,19 +9,20 @@ public class DotRaceArrayList extends JPanel {
    private Random randGen = new Random();
 
    // the length in pixels of the track
-   int trackLength = 300;
+   int trackLength = 600;
    int startLine = 50;
    // number of milliseconds (one thousanth of a second) to pause between each cycle
    int pauseTime = 15;
    Dot winnaWinnaWinna; // who has won (or null if nobody)
    int winnaEffectDiameter; // for the special effects at end
-   int defaultDiameter = 70; // default diameter for the dot
+   int defaultDiameter = 30; // default diameter for the dot
 
    int topBorder = 10; // allow for the menu bar at the top of the frame
    int border = 10; // the border around the dots
    int sideBorder = startLine; // space after the finishLine
    int windowWidth = trackLength + startLine + 50;
-   int windowHeight; // this gets set in the constructor
+   int windowHeight;
+   int trackWidth = 100; // this gets set in the constructor
 
    // This ArrayList holds the Dot objects in the race
    ArrayList<Dot> dots = new ArrayList<Dot>();
@@ -29,11 +30,11 @@ public class DotRaceArrayList extends JPanel {
    // constructor
    public DotRaceArrayList() {
       initializeRacers();
-      windowHeight = topBorder + (dots.size() * (defaultDiameter + border));
+      //windowHeight = topBorder + (dots.size() * (defaultDiameter + border));
       
       myFrame = new JFrame("Dot Racing!");
       myFrame.add(this);
-      myFrame.setSize(windowWidth, windowHeight);
+      myFrame.setSize(400, 700);
       myFrame.setVisible(true);
       runRace();
    }
@@ -53,13 +54,18 @@ public class DotRaceArrayList extends JPanel {
 
    public void runRace() {
       Dot mover;
-      int distance;
+      int distanceX;
+      int distanceY;
 
       winnaWinnaWinna = null;
       while (winnaWinnaWinna == null) {
          mover = whoMoves();
-         distance = howFar();
-         mover.moved(distance);
+         distanceX = howFarX(mover);
+         distanceY=howFarY(mover);
+         mover.moved(distanceX);
+         mover.moved(distanceY);
+         mover.Xposition+=distanceX;
+         mover.Yposition+=distanceY;
          if (mover.getDistance() + mover.getDiameter() >= trackLength + border) {
             winnaWinnaWinna = mover;
          }
@@ -93,7 +99,7 @@ public class DotRaceArrayList extends JPanel {
    
    // This method returns the number of pixels that the dot moves, kind of
    // non-linearly
-   private int howFar() {
+   private int howFarX(Dot mover) {
       int r = (randGen.nextInt(6));
       if (r < 5) {
          return 1;
@@ -103,6 +109,21 @@ public class DotRaceArrayList extends JPanel {
          return 8;
       }
    }
+
+   private int howFarY(Dot mover){
+      int r = (randGen.nextInt(6));
+      if (mover.getYPosition()>-10){
+         if (r < 5) {
+         return -1;
+      } else if (r == 5) {
+         return -3;
+      } else {
+         return -8;
+      }
+      }
+      
+   }
+
    
    
    // Draw the dots in raceTrack.
@@ -114,8 +135,8 @@ public class DotRaceArrayList extends JPanel {
       g.setColor(Color.white);
       g.fillRect(0, 0, windowWidth, windowHeight); // draw a nice white background
       g.setColor(Color.black);
-      g.drawLine(startLine, 0, startLine, windowHeight); // draw a starting line
-      g.drawLine(startLine + trackLength, 0, startLine + trackLength, windowHeight); // finish
+      g.drawOval(0, 0, 3*trackWidth, trackLength); // draw a starting line
+      g.drawOval(0+trackWidth, 0-trackLength, trackWidth, trackLength/3); // finish
       drawRacers(g);
 
    }
@@ -130,9 +151,10 @@ public class DotRaceArrayList extends JPanel {
    }
 
    public void drawRacer(Dot racer, Graphics g) {
-      int topX = racer.getDistance() + border + startLine;
-      int topY = topBorder + (racer.getRacerNumber() * defaultDiameter)
-            + border;
+      //int topX = racer.getDistance() + border + startLine;
+      //int topY = topBorder + (racer.getRacerNumber() * defaultDiameter)+ border;
+      int topX = racer.getDistance() + border + startLine + racer.getRacerNumber()*defaultDiameter;
+      int topY = racer.getDistance() - topBorder - (racer.getRacerNumber()*defaultDiameter);
       int drawDiam = racer.getDiameter() - (2 * border);
       g.setColor(racer.getColor());
       g.fillOval(topX, topY, drawDiam, drawDiam);
@@ -176,7 +198,11 @@ public class DotRaceArrayList extends JPanel {
    // returns a random element from the someNames ArrayList
    public String randomName() {
       //FINISH THIS: MAKE SURE IT NEVER REPEATS until all used
-      return someNames.get(randGen.nextInt(someNames.size()));
+      ArrayList<String> namesCopy = someNames;
+      if (namesCopy.isEmpty()){
+         namesCopy=someNames;
+      }
+      return namesCopy.remove(randGen.nextInt(namesCopy.size()));
    }
 
    ArrayList<Color> someColors = new ArrayList<Color>() {
@@ -194,11 +220,16 @@ public class DotRaceArrayList extends JPanel {
       }
    };
 
+
    // returns a random element from the someColors ArrayList
    public Color randomColor() {
-       //FINISH THIS: MAKE SURE IT NEVER REPEATS until all used
-      return someColors.get(randGen.nextInt(someColors.size()));
+      ArrayList<Color> colorsCopy = someColors;
+      if (colorsCopy.isEmpty()){
+         colorsCopy=someColors;
+         }
+      return colorsCopy.remove(randGen.nextInt(colorsCopy.size()));
    }
+   
 
    
    // This method causes your program to pause for a certain number of

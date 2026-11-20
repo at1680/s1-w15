@@ -14,6 +14,11 @@ public class Friends {
        friends.add(new Name("Adrian", "Baruzzi"));
        friends.add(new Name("Matias", "Wong"));
    }
+
+   public Name getRandomFriend(){
+    int x = r.nextInt(friends.size());
+    return friends.get(x);
+   }
    
    public void printRandomFriend(){
        //return a random Name object from the List
